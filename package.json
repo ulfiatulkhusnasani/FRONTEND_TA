@@ -1,0 +1,50 @@
+{
+  "name": "sakai-react",
+  "version": "10.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "format": "prettier --write \"{app,demo,layout,types}/**/*.{js,ts,tsx,d.ts}\"",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@react-google-maps/api": "^2.19.3",
+    "@types/leaflet": "^1.9.12",
+    "@types/react-bootstrap": "^0.32.37",
+    "@types/react-dom": "18.2.5",
+    "axios": "^1.7.9",
+    "bootstrap": "^5.3.3",
+    "chart.js": "4.2.1",
+    "framer-motion": "^11.11.9",
+    "leaflet": "^1.9.4",
+    "next": "^14.2.13",
+    "next-auth": "^4.24.11",
+    "primeflex": "^3.3.1",
+    "primeicons": "^7.0.0",
+    "primereact": "^10.8.5",
+    "react": "^18.2.0",
+    "react-camera-pro": "^1.4.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.3.0",
+    "react-leaflet": "^4.2.1",
+    "react-router-dom": "^6.28.0",
+    "react-to-print": "^3.1.0",
+    "react-transition-group": "^4.4.5",
+    "sweetalert2": "^11.6.13"
+  },
+  "devDependencies": {
+    "@next/swc-win32-x64-msvc": "^15.0.3",
+    "@types/node": "22.5.1",
+    "@types/react": "18.3.4",
+    "@types/react-leaflet": "^3.0.0",
+    "eslint": "8.43.0",
+    "eslint-config-next": "13.4.6",
+    "eslint-plugin-import": "^2.31.0",
+    "prettier": "^2.8.8",
+    "sass": "^1.63.4",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.2"
+  }
+}
