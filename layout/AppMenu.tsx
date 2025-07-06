@@ -31,14 +31,15 @@ const adminMenu: AppMenuItem[] = [
                 icon: 'pi pi-fw pi-list',
                 items: [
                     { label: 'Hadir', icon: 'pi pi-fw pi-info-circle', to: '/admin/Hadir' },
-                    { label: 'cuti', icon: 'pi pi-fw pi-info-circle', to: '/admin/Cuti' },
+                    { label: 'cuti', icon: 'pi pi-fw pi-info-circle', to: '/admin/Cuti' }
                 ]
             },
             { label: 'Task', icon: 'pi pi-fw pi-book', to: '/admin/Task' },
-             { label: 'Kinerja Karyawan', icon: 'pi pi-fw pi-book', to: '/admin/Kinerjakaryawan' },
+            { label: 'Kinerja Karyawan', icon: 'pi pi-fw pi-book', to: '/admin/Kinerjakaryawan' },
             { label: 'Payroll', icon: 'pi pi-fw pi-money-bill', to: '/admin/Payroll' },
+            { label: 'User Login', icon: 'pi pi-fw pi-users', to: '/admin/UserData' }
         ]
-    },
+    }
 ];
 
 const userMenu: AppMenuItem[] = [
@@ -54,14 +55,15 @@ const userMenu: AppMenuItem[] = [
                 icon: 'pi pi-fw pi-list',
                 items: [
                     { label: 'Hadir', icon: 'pi pi-fw pi-info-circle', to: '/user/Hadir' },
-                    { label: 'Cuti', icon: 'pi pi-fw pi-info-circle', to: '/user/Cuti' },
+                    { label: 'Cuti', icon: 'pi pi-fw pi-info-circle', to: '/user/Cuti' }
                 ]
             },
             { label: 'Task', icon: 'pi pi-fw pi-book', to: '/user/task' },
             { label: 'Kinerja Perbulan', icon: 'pi pi-fw pi-book', to: '/user/Kinerjaperbulan' },
-            { label: 'Slip Gaji', icon: 'pi pi-fw pi-user', to: '/user/SlipGaji' },
+            { label: 'Slip Gaji', icon: 'pi pi-fw pi-wallet', to: '/user/SlipGaji' },
+            { label: 'Profile', icon: 'pi pi-fw pi-user', to: '/user/Profile' }
         ]
-    },
+    }
 ];
 
 const AppMenu: React.FC = () => {
@@ -81,15 +83,7 @@ const AppMenu: React.FC = () => {
 
     return (
         <MenuProvider>
-            <ul className="layout-menu">
-                {menu.map((item, i) =>
-                    !item?.seperator ? (
-                        <AppMenuitem item={item} root={true} index={i} key={item.label} />
-                    ) : (
-                        <li className="menu-separator" key={`sep-${i}`}></li>
-                    )
-                )}
-            </ul>
+            <ul className="layout-menu">{menu.map((item, i) => (!item?.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator" key={`sep-${i}`}></li>))}</ul>
         </MenuProvider>
     );
 };

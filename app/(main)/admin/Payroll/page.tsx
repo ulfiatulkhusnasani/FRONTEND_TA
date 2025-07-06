@@ -87,10 +87,11 @@ const DataPayrollKaryawan = () => {
                 }
             });
 
-            console.log(response.data.payroll_summaries)
+            console.log(response.data.payroll_summaries);
             const payrollData = response.data.payroll_summaries.map((employee: any) => ({
                 id: employee.id_payroll,
                 id_karyawan: employee.id_karyawan,
+                tanggal: employee.tanggal,
                 namaKaryawan: employee.nama_karyawan,
                 izinCount: employee.izin_count || 0,
                 cutiCount: employee.cuti_count || 0,
@@ -104,8 +105,7 @@ const DataPayrollKaryawan = () => {
                 totalgaji: employee.total_gaji || 0,
                 totalpointkehadiran: employee.total_point_kehadiran || 0,
                 totalpointtask: employee.total_point_task || 0,
-                slipGaji: employee.slip_gaji || '',
-                
+                slipGaji: employee.slip_gaji || ''
             }));
             setPayrolls(payrollData);
         } catch (error) {
@@ -127,10 +127,7 @@ const DataPayrollKaryawan = () => {
 
             const data = response.data || [];
 
-            const karyawan = 
-
-
-            setKaryawanList(response.data);
+            const karyawan = setKaryawanList(response.data);
         } catch (error) {
             handleAxiosError(error, 'data karyawan');
         } finally {
@@ -153,7 +150,7 @@ const DataPayrollKaryawan = () => {
             id_direktur: request.id_direktur,
             target_absensi: request.target_absensi,
             target_produktivitas: request.target_produktivitas,
-            hari_produktif: request.hari_produktif,
+            hari_produktif: request.hari_produktif
         };
 
         // Validasi input
@@ -208,13 +205,13 @@ const DataPayrollKaryawan = () => {
                 summary: 'Berhasil',
                 detail: 'Data payroll karyawan berhasil disimpan'
             });
-        } catch (error:any) {
-            const e = error?.response?.data
+        } catch (error: any) {
+            const e = error?.response?.data;
             console.error('Error saving payroll:', error);
             toastRef.current?.show({
                 severity: 'error',
                 summary: 'Error',
-                detail: e.error || error.message|| 'Gagal menyimpan data payroll',
+                detail: e.error || error.message || 'Gagal menyimpan data payroll',
                 life: 3000
             });
         }
@@ -243,7 +240,7 @@ const DataPayrollKaryawan = () => {
             id_direktur: editRequest.id_direktur,
             target_absensi: editRequest.target_absensi,
             target_produktivitas: editRequest.target_produktivitas,
-            hari_produktif: editRequest.hari_produktif,
+            hari_produktif: editRequest.hari_produktif
         };
 
         // Validasi input
@@ -298,13 +295,13 @@ const DataPayrollKaryawan = () => {
                 summary: 'Berhasil',
                 detail: 'Data payroll karyawan berhasil diperbarui'
             });
-        } catch (error :any) {
-            const e = error?.response?.data
+        } catch (error: any) {
+            const e = error?.response?.data;
             console.error('Error saving payroll:', error);
             toastRef.current?.show({
                 severity: 'error',
                 summary: 'Error',
-                detail: e.error || error.message|| 'Gagal menyimpan data payroll',
+                detail: e.error || error.message || 'Gagal menyimpan data payroll',
                 life: 3000
             });
         }
@@ -315,7 +312,7 @@ const DataPayrollKaryawan = () => {
         try {
             const result = await Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: "Data yang dihapus tidak dapat dikembalikan!",
+                text: 'Data yang dihapus tidak dapat dikembalikan!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -353,17 +350,18 @@ const DataPayrollKaryawan = () => {
             <div className="card">
                 <div className="flex justify-content-between align-items-center mb-5">
                     <h5>Data Payroll</h5>
-                    <Button label="Tambah" icon="pi pi-plus" className="p-button-raised p-button-sm" onClick={() => setDialogVisible(true)} />
+                    {/* <Button label="Tambah" icon="pi pi-plus" className="p-button-raised p-button-sm" onClick={() => setDialogVisible(true)} /> */}
                 </div>
 
                 <DataTable value={payrolls} responsiveLayout="scroll" loading={loading} paginator rows={10} rowsPerPageOptions={[5, 10, 25]}>
                     <Column field="id" header="ID" style={{ width: '5%' }} />
                     <Column field="namaKaryawan" header="Nama Karyawan" style={{ width: '10%' }} />
-                    <Column field="izinCount" header="Izin" style={{ width: '5%' }} />
+                    <Column field="tanggal" header="Tanggal" style={{ width: '10%' }} />
+                    {/* <Column field="izinCount" header="Izin" style={{ width: '5%' }} />
                     <Column field="cutiCount" header="Cuti" style={{ width: '5%' }} />
                     <Column field="kehadiranCount" header="Kehadiran" style={{ width: '8%' }} />
                     <Column field="totalpointkehadiran" header="Total Point Kehadiran" style={{ width: '8%' }} />
-                    <Column field="totalpointtask" header="Total Point Task" style={{ width: '8%' }} />
+                    <Column field="totalpointtask" header="Total Point Task" style={{ width: '8%' }} /> */}
                     <Column field="gajiPokok" header="Gaji Pokok" body={(data) => `Rp ${data.gajiPokok.toLocaleString('id-ID')}`} style={{ width: '10%' }} />
                     <Column field="uangKehadiran" header="Uang Kehadiran" body={(data) => `Rp ${data.uangKehadiran.toLocaleString('id-ID')}`} style={{ width: '10%' }} />
                     <Column field="uangMakan" header="Uang Makan" body={(data) => `Rp ${data.uangMakan.toLocaleString('id-ID')}`} style={{ width: '10%' }} />
@@ -380,7 +378,7 @@ const DataPayrollKaryawan = () => {
                                 icon="pi pi-eye"
                                 className="p-button-sm p-button-info"
                                 onClick={() => {
-                                    console.log(data)
+                                    console.log(data);
                                     setSelectedPayroll(data.slipGaji);
                                     setShowDialogSlip(true);
                                 }}
@@ -388,24 +386,16 @@ const DataPayrollKaryawan = () => {
                         )}
                         style={{ width: '8%' }}
                     />
-                    <Column
+                    {/* <Column
                         header="Aksi"
                         body={(data) => (
                             <div className="flex gap-2">
-                                <Button
-                                    icon="pi pi-pencil"
-                                    className="p-button-sm p-button-warning"
-                                    onClick={() => handleEdit(data)}
-                                />
-                                {/* <Button
-                                    icon="pi pi-trash"
-                                    className="p-button-sm p-button-danger"
-                                    onClick={() => handleDelete(data.id)}
-                                /> */}
+                                <Button icon="pi pi-pencil" className="p-button-sm p-button-warning" onClick={() => handleEdit(data)} />
+                                
                             </div>
                         )}
                         style={{ width: '8%' }}
-                    />
+                    /> */}
                 </DataTable>
 
                 {/* Add Dialog */}
@@ -450,7 +440,7 @@ const DataPayrollKaryawan = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="target_absensi">Target Point Kehadiran Karyawan </label>
+                            <label htmlFor="target_absensi">Target Point Karyawan Perbulan </label>
                             <InputNumber
                                 id="target_absensi"
                                 value={request.target_absensi}
@@ -458,7 +448,7 @@ const DataPayrollKaryawan = () => {
                                 mode="decimal"
                                 min={0}
                                 showButtons
-                                placeholder="Masukkan Point Kehadiran Karyawan"
+                                placeholder="Masukkan Point Karyawan Perbulan"
                                 className="w-full"
                             />
                         </div>
@@ -476,7 +466,7 @@ const DataPayrollKaryawan = () => {
                                 className="w-full"
                             />
                         </div> */}
-                        
+
                         <div className="field">
                             <label htmlFor="hari_produktif">Hari Efektif/Bulan</label>
                             <InputNumber
@@ -566,7 +556,7 @@ const DataPayrollKaryawan = () => {
                                 className="w-full"
                             />
                         </div> */}
-                        
+
                         <div className="field">
                             <label htmlFor="hari_produktif">Hari Efektif/Bulan</label>
                             <InputNumber

@@ -3,7 +3,6 @@ import { randomUUID } from 'crypto';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-
 const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -13,7 +12,7 @@ const authOptions: NextAuthOptions = {
                 password: { label: 'password', type: 'password' }
             },
             async authorize(credentials) {
-              console.log('halo')
+                console.log('halo');
                 if (!credentials?.email || !credentials?.password) {
                     throw new Error('Email dan password wajib diisi');
                 }
@@ -24,16 +23,16 @@ const authOptions: NextAuthOptions = {
                         password: credentials.password
                     });
 
-
                     if (res.data && res.data.user) {
-                      const { email, role, token } = res.data.user;
-                
-                      return {
-                        id: randomUUID(), 
-                        email,
-                        role,
-                        token
-                      };
+                        const { email, role, token, name } = res.data.user;
+
+                        return {
+                            id: randomUUID(),
+                            email,
+                            role,
+                            token,
+                            name
+                        };
                     }
 
                     return null;
@@ -52,6 +51,7 @@ const authOptions: NextAuthOptions = {
         async jwt({ token, user }) {
             if (user) {
                 token.email = (user as any).email;
+                token.name = (user as any).name;
                 token.role = (user as any).role;
                 token.token = (user as any).token;
             }
@@ -60,6 +60,7 @@ const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             if (session.user) {
                 session.user.email = token.email as string;
+                session.user.name = token.name as string;
                 (session.user as any).role = token.role;
                 (session.user as any).token = token.token;
             }
