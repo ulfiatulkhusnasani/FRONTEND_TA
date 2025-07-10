@@ -246,7 +246,7 @@ const TaskManager = () => {
                 <div className="card">
                     <h5>Daftar Tugas</h5>
 
-                    <DataTable value={taskList} responsiveLayout="scroll" dataKey="id" className="p-datatable-sm">
+                    <DataTable value={taskList} dataKey="id" className="p-datatable-sm" paginator totalRecords={taskList.length} rowsPerPageOptions={[5, 10, 25]} rows={10}>
                         <Column header="No" body={(rowData, { rowIndex }) => rowIndex + 1} />
                         <Column field="nama_karyawan" header="Nama Karyawan" />
                         <Column field="judul_proyek" header="Judul Proyek" />

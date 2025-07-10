@@ -155,7 +155,7 @@ const DataKaryawan: React.FC = () => {
 
             if (editMode && id) {
                 // Update karyawan
-                console.log(karyawanBaru)
+                console.log(karyawanBaru);
                 const response = await axios.put(`${karyawanApiBaseUrl}/${id}`, karyawanBaru, {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -183,7 +183,7 @@ const DataKaryawan: React.FC = () => {
             // Fetch data setelah penyimpanan
             await fetchKaryawan();
 
-            console.log('test')
+            console.log('test');
 
             // Tutup dialog
             sembunyikanDialog();
@@ -261,7 +261,7 @@ const DataKaryawan: React.FC = () => {
                 <Column
                     header="Aksi"
                     body={(rowData) => (
-                        <div className="p-buttonset">
+                        <div className="" style={{ display: 'flex' }}>
                             <Button
                                 icon="pi pi-pencil"
                                 className="p-button-success"

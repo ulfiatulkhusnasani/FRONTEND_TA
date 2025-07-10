@@ -115,7 +115,7 @@ const Hadir = () => {
         { label: 'September', value: 9 },
         { label: 'Oktober', value: 10 },
         { label: 'November', value: 11 },
-        { label: 'Desember', value: 12 },
+        { label: 'Desember', value: 12 }
     ];
 
     // Fetch Data
@@ -130,33 +130,35 @@ const Hadir = () => {
     // Filter data when globalFilter, monthFilter or attendance changes
     useEffect(() => {
         let filtered = attendance;
-        
+
         // Filter berdasarkan pencarian global
         if (globalFilter) {
-            filtered = filtered.filter(entry => 
-                Object.values(entry).some(val => 
-                    val && val.toString().toLowerCase().includes(globalFilter.toLowerCase())
-                )
-            );
+            filtered = filtered.filter((entry) => Object.values(entry).some((val) => val && val.toString().toLowerCase().includes(globalFilter.toLowerCase())));
         }
-        
+
         // Filter berdasarkan bulan
         if (monthFilter !== null) {
-            filtered = filtered.filter(entry => {
+            filtered = filtered.filter((entry) => {
                 const date = new Date(entry.tanggal);
                 return date.getMonth() + 1 === monthFilter;
             });
+        } else {
+            filtered = attendance;
         }
-        
+        console.log(filtered);
         setFilteredAttendance(filtered);
     }, [globalFilter, monthFilter, attendance]);
 
     const fetchEmployees = async () => {
         const token = (session?.user as any)?.token;
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/karyawan',{}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await axios.post(
+                'http://127.0.0.1:8000/api/karyawan',
+                {},
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
             setEmployees(response.data);
         } catch (error) {
             handleError('Gagal mengambil data karyawan', error);
@@ -446,9 +448,7 @@ const Hadir = () => {
             <Toast ref={toast} />
 
             {/* Header Buttons */}
-            <div className="col-12 flex justify-content-end gap-2 mb-3">
-                {/* <Button label="Absensi Masuk" icon="pi pi-sign-in" className="p-button-sm" onClick={() => handleShowForm('masuk')} /> */}
-            </div>
+            <div className="col-12 flex justify-content-end gap-2 mb-3">{/* <Button label="Absensi Masuk" icon="pi pi-sign-in" className="p-button-sm" onClick={() => handleShowForm('masuk')} /> */}</div>
 
             {/* Integrated Absensi Form */}
             <CSSTransition nodeRef={formRef} in={isFormVisible} timeout={300} classNames="fade" unmountOnExit>
@@ -598,36 +598,15 @@ const Hadir = () => {
                     <div className="flex justify-content-between align-items-center mb-3">
                         <h2 className="m-0">Daftar Absensi</h2>
                         <div className="flex gap-2">
-                            <Dropdown 
-                                value={monthFilter}
-                                options={monthOptions}
-                                onChange={(e) => setMonthFilter(e.value)}
-                                placeholder="Filter Bulan"
-                                className="p-inputtext-sm"
-                                style={{ width: '150px' }}
-                            />
+                            <Dropdown value={monthFilter} options={monthOptions} onChange={(e) => setMonthFilter(e.value)} placeholder="Filter Bulan" className="p-inputtext-sm" optionValue="value" optionLabel="label" style={{ width: '150px' }} />
                             <span className="p-input-icon-left">
                                 <i className="pi pi-search" />
-                                <InputText 
-                                    type="search" 
-                                    value={globalFilter}
-                                    onChange={(e) => setGlobalFilter(e.target.value)}
-                                    placeholder="Cari data..." 
-                                    className="p-inputtext-sm"
-                                />
+                                <InputText type="search" value={globalFilter} onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Cari data..." className="p-inputtext-sm" />
                             </span>
                         </div>
                     </div>
-                    
-                    <DataTable 
-                        value={filteredAttendance} 
-                        paginator 
-                        rows={10} 
-                        rowsPerPageOptions={[5, 10, 25]} 
-                        responsiveLayout="scroll" 
-                        className="mt-3"
-                        globalFilter={globalFilter}
-                    >
+
+                    <DataTable value={filteredAttendance} paginator rows={10} rowsPerPageOptions={[5, 10, 25]} responsiveLayout="scroll" className="mt-3" globalFilter={globalFilter}>
                         <Column field="nama_karyawan" header="Karyawan" />
                         <Column field="tanggal" header="Tanggal" />
                         <Column field="jam_masuk" header="Jam Masuk" />

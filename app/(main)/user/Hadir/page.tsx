@@ -209,7 +209,7 @@ const Hadir = () => {
                         longitude: position.coords.longitude
                     };
 
-                    console.log(newLocation)
+                    console.log(newLocation);
 
                     if (type === 'masuk') {
                         setNewEntry((prev) => ({
@@ -654,7 +654,7 @@ const Hadir = () => {
 
                                                 {/* Action Buttons */}
                                                 <div className="flex flex-wrap gap-2 w-full">
-                                                <div className="flex align-items-center gap-2 w-full">
+                                                    <div className="flex align-items-center gap-2 w-full">
                                                         {/* Tombol Ambil Foto */}
                                                         <Button
                                                             icon="pi pi-camera"
@@ -672,7 +672,7 @@ const Hadir = () => {
                                                     {/* Hidden Camera Input */}
                                                     <input
                                                         type="file"
-                                                        id="fotopulangKamera"
+                                                        id="fileInputpulang"
                                                         accept="image/*"
                                                         capture="environment"
                                                         style={{ display: 'none' }}
@@ -842,15 +842,12 @@ const Hadir = () => {
                     <div className="flex-grow-1 relative">
                         <Camera
                             ref={captureMasuk}
-                            errorMessages={
-                                {
-                                    noCameraAccessible: 'No camera device accessible. Please connect your camera or try a different browser.',
-                                    permissionDenied: 'Permission denied. Please refresh and give camera permission.',
-                                    switchCamera:
-                                    'It is not possible to switch camera to different one because there is only one video device accessible.',
-                                    canvas: 'Canvas is not supported.'
-                                  }
-                            }
+                            errorMessages={{
+                                noCameraAccessible: 'No camera device accessible. Please connect your camera or try a different browser.',
+                                permissionDenied: 'Permission denied. Please refresh and give camera permission.',
+                                switchCamera: 'It is not possible to switch camera to different one because there is only one video device accessible.',
+                                canvas: 'Canvas is not supported.'
+                            }}
                         />
                     </div>
 
@@ -876,15 +873,12 @@ const Hadir = () => {
                     <div className="flex-grow-1 relative">
                         <Camera
                             ref={capturepulang}
-                            errorMessages={
-                                {
-                                    noCameraAccessible: 'No camera device accessible. Please connect your camera or try a different browser.',
-                                    permissionDenied: 'Permission denied. Please refresh and give camera permission.',
-                                    switchCamera:
-                                    'It is not possible to switch camera to different one because there is only one video device accessible.',
-                                    canvas: 'Canvas is not supported.'
-                                  }
-                            }
+                            errorMessages={{
+                                noCameraAccessible: 'No camera device accessible. Please connect your camera or try a different browser.',
+                                permissionDenied: 'Permission denied. Please refresh and give camera permission.',
+                                switchCamera: 'It is not possible to switch camera to different one because there is only one video device accessible.',
+                                canvas: 'Canvas is not supported.'
+                            }}
                         />
                     </div>
 

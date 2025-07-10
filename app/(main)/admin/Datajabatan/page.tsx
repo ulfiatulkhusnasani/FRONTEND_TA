@@ -220,7 +220,7 @@ const DataJabatan: React.FC = () => {
         <div className="datatable-templating-demo">
             <div className="card">
                 <h5>Data Jabatan</h5>
-                <div className="p-grid p-align-center p-justify-between" style={{ marginBottom: '20px' }}>
+                <div className="" style={{ marginBottom: '20px', display: 'flex', width: '100%', justifyContent: 'end' }}>
                     <Button
                         label="Tambah Data Jabatan"
                         icon="pi pi-plus"

@@ -268,7 +268,7 @@ const Cuti = () => {
                         <Button label="Tambah" icon="pi pi-plus" className="p-button-raised p-button-sm" onClick={handleOpenDialog} />
                     </div>
 
-                    <DataTable value={requests} loading={loading} responsiveLayout="scroll" paginator rows={10}>
+                    <DataTable value={requests} loading={loading} responsiveLayout="scroll" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}>
                         <Column header="No" body={(_, { rowIndex }) => rowIndex + 1} />
                         <Column header="Nama Karyawan" field="nama_karyawan" />
                         <Column field="tgl_mulai" header="Mulai" />
@@ -276,16 +276,7 @@ const Cuti = () => {
                         <Column field="alasan" header="Jenis Izin" />
                         <Column field="keterangan" header="Keterangan" />
                         <Column header="Status" body={statusBodyTemplate} style={{ minWidth: '200px' }} />
-                        <Column
-                            header="lampiran"
-                            body={(rowData: LeaveRequest) =>
-                                rowData.lampiran ? (
-                                    <Image width='150' height='80' preview src={`data:image/png;base64,${ rowData.lampiran}`}/>
-                                ) : (
-                                    'Tidak Ada'
-                                )
-                            }
-                        />
+                        <Column header="lampiran" body={(rowData: LeaveRequest) => (rowData.lampiran ? <Image width="150" height="80" preview src={`data:image/png;base64,${rowData.lampiran}`} /> : 'Tidak Ada')} />
                         <Column
                             header="Aksi"
                             body={(rowData: LeaveRequest) => (

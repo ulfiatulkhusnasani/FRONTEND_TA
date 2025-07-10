@@ -244,10 +244,18 @@ const TaskManager = () => {
             <div className="col-12">
                 <div className="card">
                     <h5>Daftar Tugas</h5>
-                    <div className="p-mb-3">
+                    <div className="" style={{ marginBottom: '20px', display: 'flex', width: '100%', justifyContent: 'end' }}>
                         <Button label="Tambah" icon="pi pi-plus" onClick={handleOpenDialog} />
                     </div>
-                    <DataTable value={taskList} responsiveLayout="scroll" dataKey="id" className="p-datatable-sm">
+                    <DataTable
+                        value={taskList}
+                        responsiveLayout="scroll"
+                        dataKey="id"
+                        className="p-datatable-sm"
+                        paginator
+                        rows={10} // Number of rows per page
+                        rowsPerPageOptions={[5, 10, 25]}
+                    >
                         <Column header="No" body={(rowData, { rowIndex }) => rowIndex + 1} />
                         <Column field="nama_karyawan" header="Nama Karyawan" />
                         <Column field="judul_proyek" header="Judul Proyek" />
@@ -264,7 +272,7 @@ const TaskManager = () => {
                         <Column field="point" header="Point" />
                         <Column
                             body={(rowData) => (
-                                <div className="p-buttonset">
+                                <div className="" style={{ display: 'flex' }}>
                                     <Button icon="pi pi-pencil" className="p-button-success" onClick={() => handleEdit(rowData)} />
                                     <Button icon="pi pi-trash" className="p-button-danger" onClick={() => handleDelete(rowData.id)} />
                                 </div>
