@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -9,12 +9,11 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
-import { Image } from 'primereact/image';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
+import { Image } from 'primereact/image';
 
-// ================ Tipe Data ================
 type Status = 'pending' | 'disetujui' | 'ditolak';
 
 interface LeaveRequest {
@@ -37,14 +36,14 @@ interface ErrorResponse {
     message: string;
 }
 
-// ================ Komponen Utama ================
 const Cuti = () => {
     const [requests, setRequests] = useState<LeaveRequest[]>([]);
     const [loading, setLoading] = useState(true);
     const [karyawanList, setKaryawanList] = useState<Karyawan[]>([]);
     const [dialogVisible, setDialogVisible] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [newRequest, setNewRequest] = useState<Omit<LeaveRequest, 'id'>>({
+    const [newRequest, setNewRequest] = useState<LeaveRequest>({
+        id: 0,
         id_karyawan: '',
         tgl_mulai: '',
         tgl_selesai: '',
@@ -53,21 +52,15 @@ const Cuti = () => {
         status: 'pending',
         lampiran: ''
     });
-    const [editId, setEditId] = useState<number | null>(null);
-    const { data: session } = useSession();
+    const [isEdit, setIsEdit] = useState(false);
+    const { status, data: session } = useSession();
     const toast = useRef<Toast>(null);
 
-    // ================ Konstanta ================
     const statusOptions = [
         { label: 'Pending', value: 'pending' },
         { label: 'Disetujui', value: 'disetujui' },
         { label: 'Ditolak', value: 'ditolak' }
-    ];
-
-    const leaveTypes = [
-        { label: 'Cuti', value: 'cuti' },
-        { label: 'Izin', value: 'izin' }
-    ];
+    ] as const;
 
     const statusColors: Record<Status, { bg: string; text: string }> = {
         pending: { bg: '#feedaf', text: '#8a5340' },
@@ -75,56 +68,96 @@ const Cuti = () => {
         ditolak: { bg: '#ffcdd2', text: '#c63737' }
     };
 
-    // ================ API Handler ================
-    const apiClient = useCallback(() => {
-        const token = (session?.user as any)?.token;
+    const statusBodyTemplate = (rowData: LeaveRequest) => {
+        return (
+            <div className="flex align-items-center gap-2">
+                <span
+                    className="status-badge"
+                    style={{
+                        backgroundColor: statusColors[rowData.status].bg,
+                        color: statusColors[rowData.status].text,
+                        padding: '0.25rem 0.5rem',
+                        borderRadius: '0.25rem',
+                        fontSize: '0.875rem'
+                    }}
+                >
+                    {rowData.status}
+                </span>
+                <Dropdown
+                    value={rowData.status}
+                    options={statusOptions.map((option) => ({
+                        label: option.label,
+                        value: option.value
+                    }))}
+                    onChange={(e) => handleStatusChange(e, rowData)}
+                    className="w-8rem"
+                />
+            </div>
+        );
+    };
 
-        return axios.create({
-            baseURL: 'http://127.0.0.1:8000/api',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-    }, [session]);
-
-    // ================ Fetch Data ================
-    const fetchData = useCallback(async () => {
-        if (!session) return;
-
+    const fetchRequests = async () => {
         setLoading(true);
         try {
-            const client = apiClient();
-            const [cutiRes, karyawanRes] = await Promise.all([client.post('/izin'), client.post('/karyawan')]);
-
-            setRequests(cutiRes.data);
-            setKaryawanList(karyawanRes.data);
+            const token = (session?.user as any).token;
+            const response = await axios.post('http://127.0.0.1:8000/api/izin', {}, { headers: { Authorization: `Bearer ${token}` } });
+            setRequests(response.data);
         } catch (error) {
-            handleAxiosError(error, 'data');
+            handleAxiosError(error, 'permohonan cuti');
         } finally {
             setLoading(false);
         }
-    }, [session, apiClient]);
+    };
+
+    const fetchKaryawanList = async () => {
+        setLoading(true);
+        try {
+            const token = (session?.user as any).token;
+            const response = await axios.post(
+                'http://127.0.0.1:8000/api/karyawan',
+                {},
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+            setKaryawanList(response.data);
+        } catch (error) {
+            handleAxiosError(error, 'data karyawan');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAxiosError = (error: unknown, context: string) => {
+        if (axios.isAxiosError(error)) {
+            const err = error as AxiosError<ErrorResponse>;
+            const errorMessage = err.response?.data.message || err.message;
+            toast.current?.show({
+                severity: 'error',
+                summary: `Gagal memuat ${context}`,
+                detail: errorMessage,
+                life: 3000
+            });
+        } else {
+            console.error('Terjadi kesalahan:', error);
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Terjadi kesalahan tidak diketahui',
+                life: 3000
+            });
+        }
+    };
 
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        if (session?.user) {
+            fetchRequests();
+            fetchKaryawanList();
+        }
+    }, [session]);
 
-    // ================ Error Handler ================
-    const handleAxiosError = useCallback((error: unknown, context: string) => {
-        const errorMessage = axios.isAxiosError(error) ? error.response?.data?.message || error.message : 'Terjadi kesalahan tidak diketahui';
-
-        toast.current?.show({
-            severity: 'error',
-            summary: `Gagal memuat ${context}`,
-            detail: errorMessage,
-            life: 3000
-        });
-    }, []);
-
-    // ================ Dialog Handler ================
     const handleOpenDialog = () => {
-        if (!karyawanList.length) {
+        if (karyawanList.length === 0) {
             toast.current?.show({
                 severity: 'warn',
                 summary: 'Data Belum Siap',
@@ -133,12 +166,53 @@ const Cuti = () => {
             });
             return;
         }
-        resetForm();
+        resetNewRequest();
         setDialogVisible(true);
     };
 
-    const resetForm = () => {
+    const handleSubmit = async () => {
+        const token = (session?.user as any).token;
+
+        try {
+            const formData = new FormData();
+            formData.append('id_karyawan', newRequest.id_karyawan);
+            formData.append('tgl_mulai', newRequest.tgl_mulai);
+            formData.append('tgl_selesai', newRequest.tgl_selesai);
+            formData.append('alasan', newRequest.alasan);
+            formData.append('keterangan', newRequest.keterangan);
+            formData.append('status', newRequest.status);
+            if (newRequest.lampiran) {
+                formData.append('lampiran', newRequest.lampiran);
+            }
+
+            console.log(formData);
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+
+            const response = isEdit ? await axios.post(`http://127.0.0.1:8000/api/izin/${newRequest.id}/update`, formData, config) : await axios.post('http://127.0.0.1:8000/api/izin/store', formData, config);
+
+            await fetchRequests();
+            setDialogVisible(false);
+            resetNewRequest();
+
+            Swal.fire({
+                title: 'Berhasil!',
+                text: isEdit ? 'Permohonan cuti berhasil diperbarui.' : 'Permohonan cuti berhasil ditambahkan.',
+                icon: 'success'
+            });
+        } catch (error) {
+            handleAxiosError(error, 'menyimpan permohonan izin');
+        }
+    };
+
+    const resetNewRequest = () => {
         setNewRequest({
+            id: 0,
             id_karyawan: karyawanList[0]?.id || '',
             tgl_mulai: '',
             tgl_selesai: '',
@@ -147,44 +221,33 @@ const Cuti = () => {
             status: 'pending',
             lampiran: ''
         });
-        setSelectedFile(null);
-        setEditId(null);
+        setIsEdit(false);
     };
 
-    // ================ CRUD Operations ================
-    const handleSubmit = async () => {
-        try {
-            const client = apiClient();
-            const formData = new FormData();
+    const handleStatusChange = async (e: { value: Status }, rowData: LeaveRequest) => {
+        const updatedRequest = { ...rowData, status: e.value };
+        const token = (session?.user as any).token;
 
-            // Tambahkan field ke formData
-            Object.entries(newRequest).forEach(([key, value]) => {
-                if (value !== undefined && key !== 'lampiran') {
-                    formData.append(key, value);
-                }
+        try {
+            await axios.post(`http://127.0.0.1:8000/api/izin/${updatedRequest.id}/update`, updatedRequest, {
+                headers: { Authorization: `Bearer ${token}` }
             });
 
-            if (selectedFile) {
-                formData.append('lampiran', selectedFile);
-            }
+            setRequests((prev) => prev.map((req) => (req.id === updatedRequest.id ? updatedRequest : req)));
 
-            if (editId) {
-                await client.post(`/izin/${editId}/update`, formData);
-                setDialogVisible(false);
-                Swal.fire('Berhasil!', 'Permohonan cuti berhasil diperbarui.', 'success');
-            } else {
-                await client.post('/izin/store', formData);
-                setDialogVisible(false);
-                Swal.fire('Berhasil!', 'Permohonan cuti berhasil ditambahkan.', 'success');
-            }
-
-            await fetchData();
+            Swal.fire({
+                title: 'Berhasil!',
+                text: `Status berhasil diubah menjadi ${e.value}.`,
+                icon: 'success'
+            });
         } catch (error) {
-            handleAxiosError(error, 'menyimpan permohonan izin');
+            handleAxiosError(error, 'mengubah status');
         }
     };
 
     const handleDelete = async (id: number) => {
+        const token = (session?.user as any).token;
+
         try {
             const confirm = await Swal.fire({
                 title: 'Anda yakin?',
@@ -197,8 +260,10 @@ const Cuti = () => {
             });
 
             if (confirm.isConfirmed) {
-                await apiClient().delete(`/izin/${id}`);
-                await fetchData();
+                await axios.delete(`http://127.0.0.1:8000/api/izin/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                await fetchRequests();
                 Swal.fire('Dihapus!', 'Data berhasil dihapus.', 'success');
             }
         } catch (error) {
@@ -206,74 +271,25 @@ const Cuti = () => {
         }
     };
 
-    const handleEdit = (rowData: LeaveRequest) => {
-        const { id, ...rest } = rowData;
-        setNewRequest(rest);
-        setEditId(id);
-        setDialogVisible(true);
-    };
-
-    // ================ Status Handler ================
-    const handleStatusChange = async (e: { value: Status }, rowData: LeaveRequest) => {
-        try {
-            const updatedRequest = { ...rowData, status: e.value };
-            await apiClient().post(`/izin/${updatedRequest.id}/update`, { ...updatedRequest, lampiran: null });
-
-            setRequests((prev) => prev.map((req) => (req.id === updatedRequest.id ? updatedRequest : req)));
-
-            await fetchData();
-            Swal.fire('Berhasil!', `Status berhasil diubah menjadi ${e.value}.`, 'success');
-        } catch (error) {
-            handleAxiosError(error, 'mengubah status');
-        }
-    };
-
-    // ================ Template Components ================
-    const StatusBadge = ({ status }: { status: Status }) => (
-        <span
-            className="status-badge"
-            style={{
-                backgroundColor: statusColors[status].bg,
-                color: statusColors[status].text,
-                padding: '0.25rem 0.5rem',
-                borderRadius: '0.25rem',
-                fontSize: '0.875rem'
-            }}
-        >
-            {status}
-        </span>
-    );
-
-    const StatusTemplate = (rowData: LeaveRequest) => (
-        <div className="flex align-items-center gap-2">
-            <StatusBadge status={rowData.status} />
-            <Dropdown value={rowData.status} options={statusOptions} onChange={(e) => handleStatusChange(e, rowData)} className="w-8rem" />
-        </div>
-    );
-
-    const AttachmentTemplate = (rowData: LeaveRequest) => (rowData.lampiran ? <Image width="150" height="80" preview src={`data:image/png;base64,${rowData.lampiran}`} alt="Lampiran" /> : 'Tidak Ada');
-
-    const ActionTemplate = (rowData: LeaveRequest) => (
-        <div className="flex gap-1">
-            <Button icon="pi pi-pencil" className="p-button-success p-button-rounded p-button-sm" onClick={() => handleEdit(rowData)} />
-            <Button icon="pi pi-trash" className="p-button-danger p-button-rounded p-button-sm" onClick={() => handleDelete(rowData.id)} />
-        </div>
-    );
-
     const getNamaKaryawan = (id: string) => {
         return karyawanList.find((k) => k.id === id)?.nama_karyawan || 'Tidak Diketahui';
     };
 
-    // ================ Render ================
+    const handleEdit = (rowData: LeaveRequest) => {
+        setNewRequest({
+            ...rowData,
+            lampiran: ''
+        });
+        setIsEdit(true);
+        setDialogVisible(true);
+    };
+
     return (
         <div className="grid">
             <Toast ref={toast} />
 
             <div className="col-12">
                 <div className="card">
-                    <div className="" style={{ marginBottom: '20px', display: 'flex', width: '100%', justifyContent: 'end' }}>
-                        <Button label="Tambah" icon="pi pi-plus" className="p-button-primary" onClick={handleOpenDialog} />
-                    </div>
                     <DataTable value={requests} loading={loading} responsiveLayout="scroll" paginator rows={10}>
                         <Column header="No" body={(_, { rowIndex }) => rowIndex + 1} />
                         <Column header="Nama Karyawan" body={(rowData: LeaveRequest) => getNamaKaryawan(rowData.id_karyawan)} />
@@ -281,12 +297,20 @@ const Cuti = () => {
                         <Column field="tgl_selesai" header="Selesai" />
                         <Column field="alasan" header="Jenis Izin" />
                         <Column field="keterangan" header="Keterangan" />
-                        <Column header="Status" body={StatusTemplate} style={{ minWidth: '200px' }} />
-                        <Column header="Lampiran" body={AttachmentTemplate} />
-                        <Column header="Aksi" body={ActionTemplate} />
+                        <Column header="Status" body={statusBodyTemplate} style={{ minWidth: '200px' }} />
+                        <Column header="lampiran" body={(rowData: LeaveRequest) => (rowData.lampiran ? <Image width="150" height="80" preview src={`data:image/png;base64,${rowData.lampiran}`} /> : 'Tidak Ada')} />
+                        <Column
+                            header="Aksi"
+                            body={(rowData: LeaveRequest) => (
+                                <div className="flex gap-1">
+                                    <Button icon="pi pi-pencil" className="p-button-success p-button-rounded p-button-sm" onClick={() => handleEdit(rowData)} />
+                                    <Button icon="pi pi-trash" className="p-button-danger p-button-rounded p-button-sm" onClick={() => handleDelete(rowData.id)} />
+                                </div>
+                            )}
+                        />
                     </DataTable>
 
-                    <Dialog header={editId ? 'Edit Permohonan' : 'Buat Permohonan Baru'} visible={dialogVisible} style={{ width: '50vw', maxWidth: '600px' }} onHide={() => setDialogVisible(false)}>
+                    <Dialog header={isEdit ? 'Edit Permohonan' : 'Buat Permohonan Baru'} visible={dialogVisible} style={{ width: '50vw', maxWidth: '600px' }} onHide={() => setDialogVisible(false)}>
                         <div className="p-fluid grid formgrid p-3 gap-2">
                             <div className="field col-12">
                                 <div className="flex flex-column gap-1">
@@ -295,7 +319,7 @@ const Cuti = () => {
                                 </div>
                             </div>
 
-                            <div className="field col-12 md:col-6">
+                            <div className="field col-12 md:col-12">
                                 <div className="flex flex-column gap-1 w-full">
                                     <label>Tanggal Mulai</label>
                                     <Calendar
@@ -313,7 +337,7 @@ const Cuti = () => {
                                 </div>
                             </div>
 
-                            <div className="field col-12 md:col-6">
+                            <div className="field col-12 md:col-12">
                                 <div className="flex flex-column gap-1 w-full">
                                     <label>Tanggal Selesai</label>
                                     <Calendar
@@ -336,7 +360,10 @@ const Cuti = () => {
                                     <label>Jenis Izin</label>
                                     <Dropdown
                                         value={newRequest.alasan}
-                                        options={leaveTypes}
+                                        options={[
+                                            { label: 'Cuti', value: 'cuti' },
+                                            { label: 'Izin', value: 'izin' }
+                                        ]}
                                         onChange={(e) =>
                                             setNewRequest({
                                                 ...newRequest,
@@ -354,6 +381,7 @@ const Cuti = () => {
                                     <label htmlFor="uploadlampiran" className="font-bold">
                                         Upload lampiran
                                     </label>
+
                                     <div className="p-fileupload-choose relative border-round cursor-pointer">
                                         <input id="uploadlampiran" type="file" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} className="absolute w-full h-full opacity-0" accept="image/*" />
                                         <div className="flex align-items-center gap-3 p-3 border-1 border-300 border-round hover:border-primary transition-colors transition-duration-300">

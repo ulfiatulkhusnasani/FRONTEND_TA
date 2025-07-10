@@ -329,7 +329,7 @@ const DataPayrollKaryawan = () => {
                         header="Aksi"
                         body={(data) => (
                             <div className="flex gap-2">
-                                <Button icon="pi pi-pencil" className="p-button-sm p-button-warning" onClick={() => handleEdit(data)} />
+                                <Button icon="pi pi-pencil" className="p-button-sm p-button-danger" onClick={() => handleEdit(data)} />
                             </div>
                         )}
                         style={{ width: '8%' }}

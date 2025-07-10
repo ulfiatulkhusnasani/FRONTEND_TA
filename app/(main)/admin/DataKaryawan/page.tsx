@@ -245,8 +245,8 @@ const DataKaryawan: React.FC = () => {
                 value={karyawanList}
                 responsiveLayout="scroll"
                 paginator
+                rowsPerPageOptions={[5, 10, 25]}
                 rows={10} // Number of rows per page
-                rowsPerPageOptions={[5, 10, 25]} // Options for rows per page
             >
                 <Column field="nama_karyawan" header="Nama"></Column>
                 <Column field="nip" header="NIP"></Column>

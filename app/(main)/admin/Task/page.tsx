@@ -250,11 +250,11 @@ const TaskManager = () => {
                     <DataTable
                         value={taskList}
                         responsiveLayout="scroll"
-                        dataKey="id"
+                        // dataKey="id"
                         className="p-datatable-sm"
                         paginator
-                        rows={10} // Number of rows per page
                         rowsPerPageOptions={[5, 10, 25]}
+                        rows={10} // Number of rows per page
                     >
                         <Column header="No" body={(rowData, { rowIndex }) => rowIndex + 1} />
                         <Column field="nama_karyawan" header="Nama Karyawan" />
