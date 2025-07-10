@@ -76,6 +76,7 @@ const Hadir = () => {
     const [attendance, setAttendance] = useState<AttendanceEntry[]>([]);
     const [filteredAttendance, setFilteredAttendance] = useState<AttendanceEntry[]>([]);
     const [globalFilter, setGlobalFilter] = useState<string>('');
+    const [monthFilter, setMonthFilter] = useState<number | null>(null);
     const [isFormVisible, setFormVisible] = useState(false);
     const [formType, setFormType] = useState<'masuk' | 'pulang'>('masuk');
     const [selectedLocation, setSelectedLocation] = useState<{ latitude: number; longitude: number } | null>(null);
@@ -100,6 +101,23 @@ const Hadir = () => {
     const formRef = useRef<HTMLDivElement>(null);
     const { data: session } = useSession();
 
+    // Opsi filter bulan
+    const monthOptions = [
+        { label: 'Semua Bulan', value: null },
+        { label: 'Januari', value: 1 },
+        { label: 'Februari', value: 2 },
+        { label: 'Maret', value: 3 },
+        { label: 'April', value: 4 },
+        { label: 'Mei', value: 5 },
+        { label: 'Juni', value: 6 },
+        { label: 'Juli', value: 7 },
+        { label: 'Agustus', value: 8 },
+        { label: 'September', value: 9 },
+        { label: 'Oktober', value: 10 },
+        { label: 'November', value: 11 },
+        { label: 'Desember', value: 12 },
+    ];
+
     // Fetch Data
     useEffect(() => {
         if (session?.user) {
@@ -109,19 +127,29 @@ const Hadir = () => {
         }
     }, [session]);
 
-    // Filter data when globalFilter or attendance changes
+    // Filter data when globalFilter, monthFilter or attendance changes
     useEffect(() => {
+        let filtered = attendance;
+        
+        // Filter berdasarkan pencarian global
         if (globalFilter) {
-            const filtered = attendance.filter(entry => 
+            filtered = filtered.filter(entry => 
                 Object.values(entry).some(val => 
                     val && val.toString().toLowerCase().includes(globalFilter.toLowerCase())
                 )
             );
-            setFilteredAttendance(filtered);
-        } else {
-            setFilteredAttendance(attendance);
         }
-    }, [globalFilter, attendance]);
+        
+        // Filter berdasarkan bulan
+        if (monthFilter !== null) {
+            filtered = filtered.filter(entry => {
+                const date = new Date(entry.tanggal);
+                return date.getMonth() + 1 === monthFilter;
+            });
+        }
+        
+        setFilteredAttendance(filtered);
+    }, [globalFilter, monthFilter, attendance]);
 
     const fetchEmployees = async () => {
         const token = (session?.user as any)?.token;
@@ -569,16 +597,26 @@ const Hadir = () => {
                 <div className="card">
                     <div className="flex justify-content-between align-items-center mb-3">
                         <h2 className="m-0">Daftar Absensi</h2>
-                        <span className="p-input-icon-left">
-                            <i className="pi pi-search" />
-                            <InputText 
-                                type="search" 
-                                value={globalFilter}
-                                onChange={(e) => setGlobalFilter(e.target.value)}
-                                placeholder="Cari data..." 
+                        <div className="flex gap-2">
+                            <Dropdown 
+                                value={monthFilter}
+                                options={monthOptions}
+                                onChange={(e) => setMonthFilter(e.value)}
+                                placeholder="Filter Bulan"
                                 className="p-inputtext-sm"
+                                style={{ width: '150px' }}
                             />
-                        </span>
+                            <span className="p-input-icon-left">
+                                <i className="pi pi-search" />
+                                <InputText 
+                                    type="search" 
+                                    value={globalFilter}
+                                    onChange={(e) => setGlobalFilter(e.target.value)}
+                                    placeholder="Cari data..." 
+                                    className="p-inputtext-sm"
+                                />
+                            </span>
+                        </div>
                     </div>
                     
                     <DataTable 

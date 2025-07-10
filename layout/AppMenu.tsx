@@ -59,7 +59,6 @@ const userMenu: AppMenuItem[] = [
                 ]
             },
             { label: 'Task', icon: 'pi pi-fw pi-book', to: '/user/task' },
-            { label: 'Kinerja Perbulan', icon: 'pi pi-fw pi-book', to: '/user/Kinerjaperbulan' },
             { label: 'Slip Gaji', icon: 'pi pi-fw pi-wallet', to: '/user/SlipGaji' },
             { label: 'Profile', icon: 'pi pi-fw pi-user', to: '/user/Profile' }
         ]

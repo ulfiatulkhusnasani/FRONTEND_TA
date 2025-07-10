@@ -31,8 +31,8 @@ const Register = () => {
         if (!nip.trim()) {
             Swal.fire({
                 icon: 'error',
-                title: 'NIP Diperlukan',
-                text: 'Silakan masukkan NIP karyawan.'
+                title: 'Data Diri Diperlukan',
+                text: 'Silakan masukkan Data diri.'
             });
             return;
         }
