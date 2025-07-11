@@ -274,7 +274,7 @@ const TaskManager = () => {
                             body={(rowData) => (
                                 <div className="" style={{ display: 'flex' }}>
                                     <Button icon="pi pi-pencil" className="p-button-success" onClick={() => handleEdit(rowData)} />
-                                    <Button icon="pi pi-trash" className="p-button-danger" onClick={() => handleDelete(rowData.id)} />
+                                    <Button icon="pi pi-trash" className="p-button-danger" onClick={() => handleDelete(rowData.id_tugas)} />
                                 </div>
                             )}
                             header="Aksi"
