@@ -5,7 +5,7 @@ import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
 
 import { Suspense } from 'react';
-import ClientProviders from './clientProvider'; // kita buat file ini di bawah
+import ClientProviders from './clientProvider';
 
 export const metadata = {
     title: 'PrimeReact Sakai',
