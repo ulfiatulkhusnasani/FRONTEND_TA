@@ -329,7 +329,7 @@ const DataPayrollKaryawan = () => {
                         header="Aksi"
                         body={(data) => (
                             <div className="flex gap-2">
-                                <Button icon="pi pi-pencil" className="p-button-sm p-button-danger" onClick={() => handleEdit(data)} />
+                                <Button icon="pi pi-pencil" className="p-button-sm p-button-success" onClick={() => handleEdit(data)} />
                             </div>
                         )}
                         style={{ width: '8%' }}
@@ -391,7 +391,7 @@ const DataPayrollKaryawan = () => {
                         </div>
 
                         <div className="p-mt-3 flex justify-content-end">
-                            <Button label="Simpan" icon="pi pi-check" className="p-button-success" onClick={handleSubmit} />
+                            <Button label="Simpan" icon="pi pi-check" onClick={handleSubmit} />
                         </div>
                     </div>
                 </Dialog>
@@ -452,7 +452,7 @@ const DataPayrollKaryawan = () => {
 
                         <div className="p-mt-3 flex justify-content-end gap-2">
                             <Button label="Batal" icon="pi pi-times" className="p-button-secondary" onClick={() => setEditDialogVisible(false)} />
-                            <Button label="Simpan" icon="pi pi-check" className="p-button-success" onClick={handleUpdate} />
+                            <Button label="Simpan" icon="pi pi-check" onClick={handleUpdate} />
                         </div>
                     </div>
                 </Dialog>

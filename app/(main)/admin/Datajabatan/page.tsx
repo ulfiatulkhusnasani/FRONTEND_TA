@@ -103,9 +103,9 @@ const DataJabatan: React.FC = () => {
     };
 
     const actionTemplate = (rowData: EmployeeData) => (
-        <div>
-            <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editEmployee(rowData)} />
-            <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => deleteEmployee(rowData.id)} />
+        <div className='flex gap-2'>
+            <Button icon="pi pi-pencil" className=" p-button-success p-mr-2" onClick={() => editEmployee(rowData)} />
+            <Button icon="pi pi-trash" className=" p-button-danger" onClick={() => deleteEmployee(rowData.id)} />
         </div>
     );
 

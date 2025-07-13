@@ -366,7 +366,7 @@ const TaskManager = () => {
                                 <InputText id="point" value={newTask.point !== undefined && newTask.point !== null ? newTask.point.toString() : ''} onChange={(e) => setNewTask({ ...newTask, point: Number(e.target.value) })} />
                             </div>
                             <div className="p-mt-3">
-                                <Button label="Simpan" icon="pi pi-check" className="p-button-success" onClick={handleSubmit} />
+                                <Button label="Simpan" icon="pi pi-check" onClick={handleSubmit} />
                             </div>
                         </div>
                     </Dialog>

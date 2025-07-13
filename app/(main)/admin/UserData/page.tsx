@@ -175,7 +175,7 @@ const User = () => {
                         header="Aksi"
                         body={(rowData: User) => (
                             <div className="flex gap-2">
-                                <Button icon="pi pi-pencil" className="p-button-sm p-button-warning" onClick={() => handleEdit(rowData)} />
+                                <Button icon="pi pi-pencil" className="p-button-sm p-button-success" onClick={() => handleEdit(rowData)} />
                                 <Button icon="pi pi-trash" className="p-button-sm p-button-danger" onClick={() => handleDelete(rowData)} />
                             </div>
                         )}

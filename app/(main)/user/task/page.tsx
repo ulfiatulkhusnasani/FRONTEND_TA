@@ -166,7 +166,7 @@ const TaskManager = () => {
     ];
 
     const handleStatusChange = async (e: any, rowData: Task) => {
-        const updatedTask = { ...rowData, status: e.value }; // Update the status
+        const updatedTask = { ...rowData, status: e.value, tgl_selesai: '' }; // Update the status
 
         console.log('Updated Task:', updatedTask); // Log the updated task object
 
@@ -178,8 +178,8 @@ const TaskManager = () => {
 
             console.log('API Response:', response.data); // Log the API response
 
-            setTaskList((prevTaskList: Task[]) => prevTaskList.map((task) => (task.id_tugas === updatedTask.id_tugas ? updatedTask : task)));
-
+            await fetchTaskList();
+            // setTaskList((prevTaskList: Task[]) => prevTaskList.map((task) => (task.id_tugas === updatedTask.id_tugas ? updatedTask : task)));
             Swal.fire({
                 title: 'Berhasil!',
                 text: `Status tugas berhasil diubah menjadi ${e.value}.`,
