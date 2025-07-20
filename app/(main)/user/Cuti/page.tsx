@@ -110,7 +110,10 @@ const Cuti = () => {
             const token = (session?.user as any).token;
             const response = await axios.post(
                 'http://127.0.0.1:8000/api/karyawan',
-                { email: session?.user?.email },
+                {
+                    email: session?.user?.email,
+                    status: 'active'
+                },
                 {
                     headers: { Authorization: `Bearer ${token}` }
                 }

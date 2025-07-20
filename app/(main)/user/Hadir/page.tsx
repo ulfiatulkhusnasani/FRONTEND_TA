@@ -125,7 +125,7 @@ const Hadir = () => {
             );
             setEmployees(response.data);
         } catch (error) {
-            handleError('Gagal mengambil data karyawan', error);
+            handleAxiosError(error, 'Gagal mengambil data karyawan');
         }
     };
 
@@ -143,7 +143,7 @@ const Hadir = () => {
             );
             setAttendance(response.data.map(formatAttendanceData));
         } catch (error) {
-            handleError('Gagal mengambil data absensi', error);
+            handleAxiosError(error, 'Gagal mengambil data absensi');
         }
     };
 
@@ -164,14 +164,25 @@ const Hadir = () => {
         longitude_pulang: entry.longitude_pulang
     });
 
-    const handleError = (message: string, error: any) => {
-        console.error(message, error);
-        toast.current?.show({
-            severity: 'error',
-            summary: 'Error',
-            detail: message,
-            life: 3000
-        });
+    const handleAxiosError = (error: unknown, context: string) => {
+        if (axios.isAxiosError(error)) {
+            const err = error as any;
+            const errorMessage = err.response?.data.message || err.message;
+            toast.current?.show({
+                severity: 'error',
+                summary: `Gagal memuat ${context}`,
+                detail: errorMessage,
+                life: 3000
+            });
+        } else {
+            console.error('Terjadi kesalahan:', error);
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Terjadi kesalahan tidak diketahui',
+                life: 3000
+            });
+        }
     };
 
     // Form Handlers
@@ -228,7 +239,7 @@ const Hadir = () => {
                     }
                 },
                 (error) => {
-                    handleError('Gagal mendapatkan lokasi', error);
+                    handleAxiosError(error, 'Gagal mendapatkan lokasi');
                 }
             );
         }

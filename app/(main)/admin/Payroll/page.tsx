@@ -119,7 +119,7 @@ const DataPayrollKaryawan = () => {
             const token = (session?.user as any).token;
             const response = await axios.post(
                 'http://127.0.0.1:8000/api/karyawan',
-                {},
+                { status: 'active' },
                 {
                     headers: { Authorization: `Bearer ${token}` }
                 }

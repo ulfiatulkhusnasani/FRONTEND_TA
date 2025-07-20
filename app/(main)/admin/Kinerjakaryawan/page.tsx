@@ -117,7 +117,7 @@ const DataPayrollKaryawan = () => {
             const token = (session?.user as any).token;
             const response = await axios.post(
                 'http://127.0.0.1:8000/api/karyawan',
-                {},
+                { status: 'active' },
                 {
                     headers: { Authorization: `Bearer ${token}` }
                 }
@@ -209,7 +209,7 @@ const DataPayrollKaryawan = () => {
             toastRef.current?.show({
                 severity: 'error',
                 summary: 'Error',
-                detail: e.error || error.message || 'Gagal menyimpan data kinerja',
+                detail: e.message || error.message || 'Gagal menyimpan data kinerja',
                 life: 3000
             });
         }
@@ -299,7 +299,38 @@ const DataPayrollKaryawan = () => {
             toastRef.current?.show({
                 severity: 'error',
                 summary: 'Error',
-                detail: e.error || error.message || 'Gagal menyimpan data kinerja',
+                detail: e.message || error.message || 'Gagal menyimpan data kinerja',
+                life: 3000
+            });
+        }
+    };
+
+    const handleDelete = async (data: any) => {
+        const token = (session?.user as any).token;
+
+        try {
+            await axios.post(
+                `http://127.0.0.1:8000/api/kinerja-delete`,
+                { id: data.id },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            fetchKinerjaData();
+            setEditDialogVisible(false);
+            toastRef.current?.show({
+                severity: 'success',
+                summary: 'Berhasil',
+                detail: 'Data kinerja karyawan berhasil dihapus'
+            });
+        } catch (error: any) {
+            const e = error?.response?.data;
+            console.error('Error saving kinerja:', error);
+            toastRef.current?.show({
+                severity: 'error',
+                summary: 'Error',
+                detail: e.message || error.message || 'Gagal menyimpan data kinerja',
                 life: 3000
             });
         }
@@ -330,6 +361,7 @@ const DataPayrollKaryawan = () => {
                         body={(data) => (
                             <div className="flex gap-2">
                                 <Button icon="pi pi-pencil" className="p-button-sm p-button-success" onClick={() => handleEdit(data)} />
+                                <Button icon="pi pi-trash" className="p-button-sm p-button-danger" onClick={() => handleDelete(data)} />
                             </div>
                         )}
                         style={{ width: '8%' }}

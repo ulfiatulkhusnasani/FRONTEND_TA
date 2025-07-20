@@ -116,7 +116,7 @@ const DashboardAdmin = () => {
         try {
             const { data: res } = await axios.post(
                 'http://127.0.0.1:8000/api/karyawan',
-                {},
+                { status: 'active' },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -186,7 +186,7 @@ const DashboardAdmin = () => {
                                 <i className="pi pi-fw pi-exclamation-circle text-xl" />
                             </div>
                         </div>
-                        <div className='flex flex-column gap-2'>
+                        <div className="flex flex-column gap-2">
                             <span className="text-green-500 font-medium">total semua cuti karyawan dalam tahun {tahun}</span>
                             <span className="text-500">Lihat selengkapnya</span>
                         </div>
