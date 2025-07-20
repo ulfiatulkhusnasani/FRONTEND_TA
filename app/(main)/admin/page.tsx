@@ -157,7 +157,7 @@ const DashboardAdmin = () => {
                         <div className="flex justify-content-between mb-3">
                             <div>
                                 <span className="block text-500 font-medium mb-3">HADIR</span>
-                                <div className="text-900 font-medium text-xl">{hadirCount}</div> {/* Display employee count */}
+                                <div className="text-900 font-medium text-xl">{hadirCount}</div>
                             </div>
                             <div className="flex align-items-center justify-content-center" style={{ width: '2.5rem', height: '2.5rem', backgroundColor: '#8FFF7C', borderRadius: '50%' }}>
                                 <i className="pi pi-clock text-xl" />
@@ -180,7 +180,7 @@ const DashboardAdmin = () => {
                         <div className="flex justify-content-between mb-3">
                             <div>
                                 <span className="block text-500 font-medium mb-3">CUTI</span>
-                                <div className="text-900 font-medium text-xl">{cutiCount}</div> {/* Display leave requests count */}
+                                <div className="text-900 font-medium text-xl">{cutiCount}</div>
                             </div>
                             <div className="flex align-items-center justify-content-center" style={{ width: '2.5rem', height: '2.5rem', backgroundColor: '#7C96FF', borderRadius: '50%' }}>
                                 <i className="pi pi-fw pi-exclamation-circle text-xl" />
@@ -205,7 +205,7 @@ const DashboardAdmin = () => {
                         <div className="flex justify-content-between mb-3">
                             <div>
                                 <span className="block text-500 font-medium mb-3">Karyawan</span>
-                                <div className="text-900 font-medium text-xl">{karyawanCount}</div> {/* Display overtime count */}
+                                <div className="text-900 font-medium text-xl">{karyawanCount}</div>
                             </div>
                             <div className="flex align-items-center justify-content-center" style={{ width: '2.5rem', height: '2.5rem', backgroundColor: '#FA6568', borderRadius: '50%' }}>
                                 <i className="pi pi-users text-xl" />
