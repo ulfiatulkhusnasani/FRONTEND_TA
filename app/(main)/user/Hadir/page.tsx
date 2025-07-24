@@ -348,7 +348,7 @@ const Hadir = () => {
     const prepareFormDataMasuk = async () => {
         return {
             email_karyawan: newEntry.email_karyawan,
-            tanggal: newEntry.tanggal?.toISOString().split('T')[0],
+            tanggal: newEntry.tanggal,
             jam_masuk: newEntry.jam_masuk.toTimeString().split(' ')[0].slice(0, 5),
             foto_masuk: newEntry.foto_masuk,
             latitude_masuk: Number(newEntry.latitude_masuk),
