@@ -25,9 +25,9 @@ interface Task {
     status: string;
     judul_proyek: string;
     kegiatan: string;
-    tgl_mulai: string;
-    batas_penyelesaian: string;
-    tgl_selesai: string | null;
+    tgl_mulai: null | string | Date;
+    batas_penyelesaian: null | string | Date;
+    tgl_selesai: null | string | Date;
     id_karyawan: number;
     point: number;
     nama_karyawan: string;
@@ -43,9 +43,9 @@ const TaskManager = () => {
         judul_proyek: '',
         kegiatan: '',
         status: 'belum dimulai',
-        tgl_mulai: '',
-        batas_penyelesaian: '',
-        tgl_selesai: '',
+        tgl_mulai: null,
+        batas_penyelesaian: null,
+        tgl_selesai: null,
         point: 0,
         nama_karyawan: '',
         jabatan_nama: ''
@@ -324,7 +324,7 @@ const TaskManager = () => {
                                     onChange={(e) =>
                                         setNewTask({
                                             ...newTask,
-                                            tgl_mulai: e.value ? e.value.toISOString().split('T')[0] : ''
+                                            tgl_mulai: e.value ? e.value : null
                                         })
                                     }
                                     dateFormat="yy-mm-dd"
@@ -339,7 +339,7 @@ const TaskManager = () => {
                                     onChange={(e) =>
                                         setNewTask({
                                             ...newTask,
-                                            batas_penyelesaian: e.value ? e.value.toISOString().split('T')[0] : ''
+                                            batas_penyelesaian: e.value ? e.value : null
                                         })
                                     }
                                     dateFormat="yy-mm-dd"
@@ -354,7 +354,7 @@ const TaskManager = () => {
                                     onChange={(e) =>
                                         setNewTask({
                                             ...newTask,
-                                            tgl_selesai: e.value ? e.value.toISOString().split('T')[0] : ''
+                                            tgl_selesai: e.value ? e.value : null
                                         })
                                     }
                                     dateFormat="yy-mm-dd"

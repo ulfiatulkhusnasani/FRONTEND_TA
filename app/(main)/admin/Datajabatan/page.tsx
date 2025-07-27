@@ -68,8 +68,8 @@ const DataJabatan: React.FC = () => {
                     dailyAllowance: parseFloat(item.uang_kehadiran_perhari),
                     mealAllowance: parseFloat(item.uang_makan),
                     bonus: item.bonus ? parseFloat(item.bonus) : 0,
-                    allowance: item.tunjangan ? parseFloat(item.tunjangan) : 0,
-                    deduction: item.potongan ? parseFloat(item.potongan) : 0
+                    allowance: item.tunjangan ? parseFloat(item.tunjangan) : 0
+                    // deduction: item.potongan ? parseFloat(item.potongan) : 0
                 }));
                 setEmployees(mappedData);
             } else {
@@ -103,7 +103,7 @@ const DataJabatan: React.FC = () => {
     };
 
     const actionTemplate = (rowData: EmployeeData) => (
-        <div className='flex gap-2'>
+        <div className="flex gap-2">
             <Button icon="pi pi-pencil" className=" p-button-success p-mr-2" onClick={() => editEmployee(rowData)} />
             <Button icon="pi pi-trash" className=" p-button-danger" onClick={() => deleteEmployee(rowData.id)} />
         </div>
@@ -165,8 +165,8 @@ const DataJabatan: React.FC = () => {
                 uang_kehadiran_perhari: formData.dailyAllowance,
                 uang_makan: formData.mealAllowance,
                 bonus: formData.bonus,
-                tunjangan: formData.allowance,
-                potongan: formData.deduction
+                tunjangan: formData.allowance
+                // potongan: formData.deduction
             };
 
             const token = (session?.user as any)?.token;
@@ -258,7 +258,7 @@ const DataJabatan: React.FC = () => {
                     <Column field="mealAllowance" header="Uang Makan" body={(data) => (data.mealAllowance ? `Rp. ${data.mealAllowance.toLocaleString('id-ID')}` : 'Rp. 0')} style={{ width: '15%' }}></Column>
                     <Column field="bonus" header="Bonus" body={(data) => (data.bonus ? `Rp. ${data.bonus.toLocaleString('id-ID')}` : 'Rp. 0')} style={{ width: '15%' }}></Column>
                     <Column field="allowance" header="Tunjangan" body={(data) => (data.allowance ? `Rp. ${data.allowance.toLocaleString('id-ID')}` : 'Rp. 0')} style={{ width: '15%' }}></Column>
-                    <Column field="deduction" header="Potongan" body={(data) => (data.deduction ? `Rp. ${data.deduction.toLocaleString('id-ID')}` : 'Rp. 0')} style={{ width: '15%' }}></Column>
+                    {/* <Column field="deduction" header="Potongan" body={(data) => (data.deduction ? `Rp. ${data.deduction.toLocaleString('id-ID')}` : 'Rp. 0')} style={{ width: '15%' }}></Column> */}
                     <Column header="Aksi" body={actionTemplate} style={{ width: '10%' }}></Column>
                 </DataTable>
             </div>
@@ -301,10 +301,10 @@ const DataJabatan: React.FC = () => {
                         <label htmlFor="allowance">Tunjangan</label>
                         <InputText id="allowance" value={formData.allowance?.toString() || ''} onChange={(e) => onInputChange(e, 'allowance')} placeholder="Masukkan tunjangan (opsional)" />
                     </div>
-                    <div className="p-field">
+                    {/* <div className="p-field">
                         <label htmlFor="deduction">Potongan</label>
                         <InputText id="deduction" value={formData.deduction?.toString() || ''} onChange={(e) => onInputChange(e, 'deduction')} placeholder="Masukkan potongan (opsional)" />
-                    </div>
+                    </div> */}
                 </div>
             </Dialog>
 
